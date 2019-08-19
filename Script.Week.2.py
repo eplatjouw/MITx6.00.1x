@@ -162,3 +162,281 @@ while abs(guess*guess - y) >= epsilon:
     guess = guess - (((guess**2) - y) / (2*guess))
 print("numGuesses = " + str(numGuesses))
 print("Square root of " + str(y) + " is about " + str(guess))
+
+
+
+## Abstraction, decomposition and functions
+# Decomposition: Break problem into different, self-contained pieces
+# Abstraction: Suppress details of method to computesomething from use of that computation
+
+# Functions:
+    # Not run until they are called or invoked in a program
+    # has a name
+    # has parameters (0 or more)
+    # has a docstring ( optional but recommended)
+    # has a body
+
+def is_even (i):
+    """             
+    Input: i, a positive int  
+    Returns True if i is even, otherwise False
+    
+    """
+    print("hi")
+    return i%2 == 0 # return: ready to stop computation, give back value of following expressions
+
+is_even(3)
+is_even(2)
+
+
+def f(x):
+    x = x + 1
+    print("in f(x): x =", x)
+    return  x
+x = 3
+z = f(x)
+
+    # If no return Python returns the value none
+def is_even (i):
+    """             
+    Input: i, a positive int  
+    Does not return anything
+    
+    """
+    i%2 == 0
+
+is_even(2)
+
+# Return vs Print
+# Return:
+    # Only has meaning inside the function
+    # Only one return function executed inside a function
+    # code inside function but after return statement not executed
+    # has a value associated with it, given to function caller
+# Print:
+    # Print can be used outside functions
+    # can execute many print statements inside a functions
+    # code inside function can be executed after a print statement
+    # has a value associated with it, outputted to the console
+    
+def func_a():
+    print("inside func_a")
+def func_b(y):
+    print("inside func_b")
+    return y
+def func_c(z):
+    print("inside func_c")
+    return z()
+print(func_a())
+print(5 + func_b(2))
+print(func_c(func_a))
+
+# Inside a function, can access a variable defined outside
+# inside a function, cannot modify a variable defined outside
+def f(y):
+    x = 1
+    x += 1
+    print(x)
+x=5
+f(x) # prints 2 (function returns x from inside function env)
+print(x) # prints 5 (prints x as defined in global env)
+
+def g(y):
+    print(x)
+    print(x+1)
+x = 5
+g(x)
+print(x)
+
+def h(y):
+    x = x + 1 # UnboundLocalError
+x = 5
+h(x)
+print(x)
+
+
+def g(x):
+    def h():
+        x = "abc"
+    x = x + 1
+    print("in g(x): x =", x)
+    h()
+    return x
+
+x = 3
+z = g(x)
+
+
+# Keyword Arguments and Default Values
+def printName(firstName, lastName, reverse):
+    if reverse:
+        print(lastName + ", "+ firstName)
+    else:
+        print(firstName, lastName)
+        
+printName("Eric", " Grimson", False)
+printName("Eric", " Grimson", True)
+printName("Eric", " Grimson", reverse = False)
+printName("Eric", lastName = " Grimson", reverse = False)
+printName( lastName = " Grimson",firstName = "Eric", reverse = False)
+       
+def printName(firstName, lastName, reverse = False): # Set Default Value
+    if reverse:
+        print(lastName + ", "+ firstName)
+    else:
+        print(firstName, lastName)  
+
+printName("Eric", " Grimson")
+printName("Eric", " Grimson", True)
+
+
+# Specifications
+# a contract between implementer of a function and the clients who will use it
+    # Assumption: conditions must be met by client of function; typically constraints on values of parameters
+    # Guarantees: conditions that must be met by function, providing assumptions met
+# Implemented with docstring
+def is_even (i):
+    """             
+    Input: i, a positive int  
+    Returns True if i is even, otherwise False
+    
+    """
+    print("hi")
+    return i%2 == 0
+
+
+# Recursion
+    # a programming technique where a function calls itself
+    # goal is not have infinite recursion
+        # must have 1 or more base cases
+        # must solve the same problem on some other input with the goal of simplifying the larger problem
+
+def mult_iter(a,b):  # multiplication of integers, iterative way
+    result = 0
+    while b > 0:
+        result += a
+        b -= 1
+    return result
+
+def mult(a, b): # multiplication of integers, recursive way
+    if b == 1 :         # base case
+        return a
+    else:               # recursive step
+        return a + mult(a, b-1) 
+
+mult_iter(3,6)
+mult(3,6)
+
+
+def fact(n):    # Factorials recursive way
+    if n == 1:
+        return 1
+    else:
+        return n*fact(n-1)
+
+print(fact(4))
+
+
+# Inductive Reasoning
+    # Mathematical Induction
+    # To prove a statement indexed on integers is true for all values of n:
+        # Prove it is true when n is smallest value (e.g. n = 0 or n = 1)
+        # Then prove if it is true for an arbitrary value of n, also must be true for n + 1
+
+
+# Towers of Hanoi
+    # Looking at it recursively easy to write code which would otherwise be very difficult to see
+def printMove(fr, to):
+    print("move from "+ str(fr) + " to "+ str(to))
+
+def Towers(n, fr, to, spare):
+    if n == 1:
+        printMove(fr, to)
+    else:
+        Towers(n-1, fr, spare, to)
+        Towers(1, fr, to ,spare)
+        Towers(n-1, spare, to, fr)
+        
+print(Towers(4, "P1", "P2", "P3"))
+
+
+# Fibonacci
+    # Multiple base cases
+def fib(x):
+    """
+    assumes x an int >= 0
+    returns Fibonacci of x
+    
+    """
+    if x == 0 or x == 1:
+        return 1
+    else:
+        return fib(x-1) + fib(x-2)
+fib(0)
+fib(1)
+fib(2)
+fib(3)
+fib(4)
+fib(15)    
+
+
+# Recursion on non-numerics
+    # "Able was I, ere I saw Elba" -> "ablewasiereisawelba"
+    # isPalindrome("ablewasiereisawelba")
+    # is same as
+        # "a" == "a" and
+        # isPalindrome("blewasiereisawelb)
+        
+def isPalindrome(s):
+    
+    def toChars(s):
+        s=s.lower()
+        ans = ""
+        for c in s:
+            if c in "abcdefghijklmnopqrstuvwxyz":
+                ans = ans + c
+        return ans
+    
+    def isPal(s):
+        if len(s) <= 1:
+            return True
+        else:
+            return s[0] == s[-1] and isPal(s[1:-1])
+    
+    return isPal(toChars(s))
+
+isPalindrome("eve")
+isPalindrome("Able was I, ere I saw Elba")
+
+
+# Files and  Modules
+    # Module is a file with certain definitions, functions and more
+import circle
+print(pi)
+pi = 3
+print(pi)
+print(circle.pi)
+print(circle.area(3))
+print(circle.circumference(3))
+
+from circle import *
+print(pi)
+print(area(3))
+
+    # Save work for later use
+        # every OS own way of handling files; Python provides OS independant mean to access files
+        # using a file handle
+nameHandle = open("kids", "w")
+        # creates file named kids and returns handle which we can name and thus reference
+        # w indicates file is to opened for writing info
+        
+nameHandle = open("kids", "w")
+for i in range(2):
+    name = input("Enter name: ")
+    nameHandle.write(name + '\n')
+nameHandle.close()
+
+nameHandle = open("kids", "r") # r for reading into file
+for line in nameHandle:
+   print(line)
+nameHandle.close()
